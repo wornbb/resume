@@ -1,0 +1,76 @@
+%%marks
+time_tag = [273,1];
+%%read steady state data
+[std_num,std_txt,std_raw] = xlsread('Steady State.csv');
+std_txt = string(std_txt);
+%%trim down the size of numerical data for sum 
+trim_std_num = std_num(time_tag(1):end,time_tag(2):end);
+trim_std_num(1,1) = 0;
+%%calculation the normal value for sensors
+dim_trim = size(trim_std_num);
+for i = 2:dim_trim(2)
+    avg = sum(trim_std_num) / dim_trim(1);
+end
+%%set threshold
+l = 0.9 .*avg;
+h = 1.1 .*avg;
+
+%%read malfunction data
+[mal_num,mal_txt,mal_raw] = xlsread('Malfunction 15 Fail Absorber Circulation Pump.csv');
+
+
+trim_mal_num = mal_num(time_tag(1):end,time_tag(2):end);
+dim_mal = size(trim_mal_num);
+%%initialize mandatory database
+alarm = struct('title',string([]),'index',zeros(1,dim_mal(2)),'value',zeros(dim_mal(1),dim_mal(2)),'type',zeros(dim_mal(1),1));
+log_cursor = [1,1];
+%%set plot tracker, this tracker will note how many subplots to be ploted
+%%and note the current
+plot_counter = [0 0];
+%%detecting
+for i = 2:dim_mal(2) %column
+    for j = (time_tag(1) + 1):dim_mal(1) %row
+        la = mal_num(j,i) < l(i);
+        ha = mal_num(j,i) > h(i);
+        if la == true||ha == true
+            alarm.title(1,log_cursor(2),log_cursor(1) == 1) = std_txt(time_tag(1),i);
+            alarm.index(1,log_cursor(2),log_cursor(1) == 1) = i;
+            alarm.value(log_cursor(1),log_cursor(2)) = mal_num(j,i);
+            alarm.type(log_cursor(1),log_cursor(2),la==true) = -1;
+            alarm.type(log_cursor(1),log_cursor(2),ha==true) = 1;
+            log_cursor(1) = log_cursor(1) + 1;
+            %alarm_log(log_cursor(1),log_cursor(2)) = mal_num(j,1);
+        end
+    end
+    log_cursor(1,2,log_cursor(1) ~= 1) = log_cursor(2) + 1; %increment column
+    log_cursor(1) = 1; %reset row location
+end
+
+[useless, plot_num] = size(alarm.title);
+time = trim_mal_num(:,1);
+%y = zeros(dim_mal(1),plot_num);
+y = alarm.value(:,2);
+h_thre = zeros(dim_mal(1),1) + avg(1,2)*1.1;
+l_thre = zeros(dim_mal(1),1) + avg(1,2)*0.9;
+figure;
+hold on;
+plot(time,y);
+plot(time,h_thre,'--','red');
+plot(time,l_thre,'
+% for i=1:mod(plot_num,
+%     
+% %     if alarm_log(1,i) ~= 0 && mod(i,5) ~= 0
+% %         y(:,mod(i,5)) = alarm_value(:,alarm_log(1,i));
+% %     elseif alarm_log(1,i) ~= 0 && mod(i,5) == 0
+% %         y(:,5) = alarm_value(:,alarm_log(1,i));
+% %         %figure;
+% %         subplot(11,5,ceil(i/5));
+% %         stairs(time,y);
+% %         y = zeros(dim_mal(1),5);
+% %     else
+% %         %figure;
+% %         subplot(11,5,ceil(i/5));
+% %         stairs(time,y);
+% %         break;
+% %     end
+% end

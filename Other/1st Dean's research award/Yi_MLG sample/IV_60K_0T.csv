@@ -1,0 +1,107 @@
+[ SWEEP SETTINGS ],,,,,,
+Bias & Step SMU NPLC,0.056,,,,,
+Bias & Step SMU Auto Zero,ONCE,,,,,
+Bias & Step SMU Source Delay,0 s,,,,,
+Bias & Step SMU Measure Count,1,,,,,
+Bias & Step SMU Measure Delay,0 s,,,,,
+Bias & Step SMU Measure Delay Factor,1,,,,,
+Bias & Step SMU Filter Type,OFF,,,,,
+Bias & Step SMU Filter Count,Not Applicable,,,,,
+Bias & Step SMU Analog Filter,OFF,,,,,
+Sweep SMU Timing,Same as Bias & Step SMU,,,,,
+Sweep SMU Sampling Interval,Not Applicable,,,,,
+Sweep SMU Sampling Count,Not Applicable,,,,,
+Sweep SMU Sampling Delay,Not Applicable,,,,,
+Sweep SMU Sampling Analog Filter,Not Applicable,,,,,
+,,,,,,
+Instrument Name,Bias_SMU,Sweep_SMU,,,,
+Instrument ID,localnode.smub,localnode.smua,,,,
+Assignment Type,Bias,Sweep,,,,
+Source Function,voltage,voltage,,,,
+Source Mode,Normal,Normal,,,,
+Measure Function,current,current,,,,
+Sense Mode,Two-Wire,Two-Wire,,,,
+Asymptote,Not Applicable,Not Applicable,,,,
+Source Limit,1.0 mA,100.0 mA,,,,
+Source Range,2 V,2 V,,,,
+Bias Source Value,0.0 V,Not Applicable,,,,
+Step/Sweep Start Level,Not Applicable,2.0 V,,,,
+Step/Sweep Stop Level,Not Applicable,-2.0 V,,,,
+Step/Sweep Style,Not Applicable,LIN,,,,
+# of steps / sweep points,Not Applicable,60,,,,
+Measure Range,100 mA,100 mA,,,,
+Step-to-Sweep delay,Not Applicable,Not Applicable,,,,
+Custom Sweep?,Not Applicable,No,,,,
+Sweep time/point,Not Applicable,50 ms,,,,
+Pulse Sweep?,Not Applicable,Yes,,,,
+Pulse Bias Level,Not Applicable,10.0 mV,,,,
+Pulse Width,Not Applicable,1 ms,,,,
+,,,,,,
+[ DATA ],,,,,,
+Name,Bias_SMU,,,Sweep_SMU,,
+Buffer,localnode.smub.nvbuffer1,,,localnode.smua.nvbuffer1,,
+NumReadings,1,,,60,,
+BaseTimestamp,3/27/15 9:54 PM 0.646778 (GMT),,,3/27/15 9:54 PM 0.651419 (GMT),,
+,,,,,,
+,Timestamp,Source Value,Reading,Timestamp,Source Value,Reading
+,(seconds),(Volts),(Amps),(seconds),(Volts),(Amps)
+1,0,0,-7.03E-07,0,2,0.07042652
+2,,,,0.049997,1.932203,0.06780239
+3,,,,0.099996,1.864407,0.06534358
+4,,,,0.149997,1.79661,0.06285962
+5,,,,0.199996,1.728814,0.06043146
+6,,,,0.249996,1.661017,0.05798658
+7,,,,0.299997,1.59322,0.05555826
+8,,,,0.349996,1.525424,0.05314289
+9,,,,0.399997,1.457627,0.0507581
+10,,,,0.45,1.38983,0.04845271
+11,,,,0.499996,1.322034,0.04591764
+12,,,,0.549996,1.254237,0.04345207
+13,,,,0.599996,1.186441,0.04103042
+14,,,,0.649997,1.118644,0.0386477
+15,,,,0.699996,1.050847,0.03630383
+16,,,,0.749997,0.9830508,0.03389069
+17,,,,0.799996,0.9152542,0.03152
+18,,,,0.849996,0.8474576,0.0291556
+19,,,,0.900001,0.779661,0.02685603
+20,,,,0.949996,0.7118644,0.02439904
+21,,,,0.999997,0.6440678,0.02204782
+22,,,,1.049996,0.5762712,0.01969361
+23,,,,1.099996,0.5084746,0.01735772
+24,,,,1.149996,0.440678,0.01502558
+25,,,,1.199996,0.3728814,0.01270701
+26,,,,1.249997,0.3050847,0.01038413
+27,,,,1.299996,0.2372881,0.008061886
+28,,,,1.350001,0.1694915,0.005753112
+29,,,,1.399996,0.1016949,0.003436911
+30,,,,1.449996,0.03389831,0.001142871
+31,,,,1.500105,-0.03389831,-0.001163006
+32,,,,1.550105,-0.1016949,-0.003463864
+33,,,,1.600105,-0.1694915,-0.005774999
+34,,,,1.650105,-0.2372881,-0.008097696
+35,,,,1.700105,-0.3050847,-0.01042591
+36,,,,1.750105,-0.3728814,-0.01275574
+37,,,,1.800105,-0.440678,-0.01508626
+38,,,,1.850105,-0.5084746,-0.0174275
+39,,,,1.900104,-0.5762712,-0.01978016
+40,,,,1.950105,-0.6440678,-0.02217022
+41,,,,2.000104,-0.7118644,-0.02452227
+42,,,,2.050105,-0.779661,-0.02690458
+43,,,,2.100105,-0.8474576,-0.02929342
+44,,,,2.150105,-0.9152542,-0.03168745
+45,,,,2.200105,-0.9830508,-0.03397628
+46,,,,2.250105,-1.050847,-0.036316
+47,,,,2.300105,-1.118644,-0.03862889
+48,,,,2.350108,-1.186441,-0.04097113
+49,,,,2.400105,-1.254237,-0.04328057
+50,,,,2.450105,-1.322034,-0.04564182
+51,,,,2.500105,-1.38983,-0.04796145
+52,,,,2.550105,-1.457627,-0.05026637
+53,,,,2.600105,-1.525424,-0.05258578
+54,,,,2.650105,-1.59322,-0.05483912
+55,,,,2.700105,-1.661017,-0.05717708
+56,,,,2.750105,-1.728814,-0.05949656
+57,,,,2.800105,-1.79661,-0.06181749
+58,,,,2.850105,-1.864407,-0.06415889
+59,,,,2.900105,-1.932203,-0.06653363
+60,,,,2.950104,-2,-0.06882828

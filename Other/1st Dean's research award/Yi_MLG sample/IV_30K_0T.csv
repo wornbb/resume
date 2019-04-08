@@ -1,0 +1,107 @@
+[ SWEEP SETTINGS ]
+Bias & Step SMU NPLC,0.056
+Bias & Step SMU Auto Zero,ONCE
+Bias & Step SMU Source Delay,0 s
+Bias & Step SMU Measure Count,1
+Bias & Step SMU Measure Delay,0 s
+Bias & Step SMU Measure Delay Factor,1.0
+Bias & Step SMU Filter Type,OFF
+Bias & Step SMU Filter Count,Not Applicable
+Bias & Step SMU Analog Filter,OFF
+Sweep SMU Timing,Same as Bias & Step SMU
+Sweep SMU Sampling Interval,Not Applicable
+Sweep SMU Sampling Count,Not Applicable
+Sweep SMU Sampling Delay,Not Applicable
+Sweep SMU Sampling Analog Filter,Not Applicable
+
+Instrument Name,Bias_SMU,Sweep_SMU
+Instrument ID,localnode.smub,localnode.smua
+Assignment Type,Bias,Sweep
+Source Function,voltage,voltage
+Source Mode,Normal,Normal
+Measure Function,current,current
+Sense Mode,Two-Wire,Two-Wire
+Asymptote,Not Applicable,Not Applicable
+Source Limit,1.0 mA,100.0 mA
+Source Range,2 V,2 V
+Bias Source Value,0.0 V,Not Applicable
+Step/Sweep Start Level,Not Applicable,2.0 V
+Step/Sweep Stop Level,Not Applicable,-2.0 V
+Step/Sweep Style,Not Applicable,LIN
+# of steps / sweep points,Not Applicable,60
+Measure Range,100 mA,100 mA
+Step-to-Sweep delay,Not Applicable,Not Applicable
+Custom Sweep?,Not Applicable,No
+Sweep time/point,Not Applicable,50 ms
+Pulse Sweep?,Not Applicable,Yes
+Pulse Bias Level,Not Applicable,10.0 mV
+Pulse Width,Not Applicable,1 ms
+
+[ DATA ]
+Name,Bias_SMU,,,Sweep_SMU,,
+Buffer,localnode.smub.nvbuffer1,,,localnode.smua.nvbuffer1,,
+NumReadings,1,,,60,,
+BaseTimestamp,3/27/15 9:50 PM 0.820494 (GMT),,,3/27/15 9:50 PM 0.825092 (GMT),,
+,,,,,,
+,Timestamp,Source Value,Reading,Timestamp,Source Value,Reading
+,(seconds),(Volts),(Amps),(seconds),(Volts),(Amps)
+1,0.0,0.0,-2.384186E-7,0.0,2.0,0.06822699
+2,,,,0.049996,1.932203,0.0656301
+3,,,,0.099996,1.864407,0.06320175
+4,,,,0.149997,1.79661,0.060815
+5,,,,0.199996,1.728814,0.05845315
+6,,,,0.249997,1.661017,0.05611056
+7,,,,0.299996,1.59322,0.05372779
+8,,,,0.349996,1.525424,0.05139416
+9,,,,0.399996,1.457627,0.04899385
+10,,,,0.450001,1.38983,0.04680989
+11,,,,0.499997,1.322034,0.0443262
+12,,,,0.549996,1.254237,0.04197217
+13,,,,0.599997,1.186441,0.03964842
+14,,,,0.649996,1.118644,0.0373823
+15,,,,0.699996,1.050847,0.03504637
+16,,,,0.749997,0.9830508,0.03267748
+17,,,,0.799996,0.9152542,0.03043473
+18,,,,0.849997,0.8474576,0.0281457
+19,,,,0.9,0.779661,0.0259123
+20,,,,0.949996,0.7118644,0.0235641
+21,,,,0.999996,0.6440678,0.02128725
+22,,,,1.049996,0.5762712,0.01901585
+23,,,,1.099997,0.5084746,0.01675555
+24,,,,1.149996,0.440678,0.01448392
+25,,,,1.199997,0.3728814,0.01222308
+26,,,,1.249996,0.3050847,0.009994662
+27,,,,1.299997,0.2372881,0.007764101
+28,,,,1.350001,0.1694915,0.005538297
+29,,,,1.399996,0.1016949,0.003309417
+30,,,,1.449997,0.03389831,0.001100004
+31,,,,1.500105,-0.03389831,-0.001119614
+32,,,,1.550105,-0.1016949,-0.003336156
+33,,,,1.600105,-0.1694915,-0.005562031
+34,,,,1.650105,-0.2372881,-0.007794428
+35,,,,1.700105,-0.3050847,-0.01004958
+36,,,,1.750105,-0.3728814,-0.01230313
+37,,,,1.800105,-0.440678,-0.01454994
+38,,,,1.850104,-0.5084746,-0.01681689
+39,,,,1.900104,-0.5762712,-0.0191197
+40,,,,1.950105,-0.6440678,-0.02139624
+41,,,,2.000104,-0.7118644,-0.02365032
+42,,,,2.050106,-0.779661,-0.02598142
+43,,,,2.100105,-0.8474576,-0.02829373
+44,,,,2.150105,-0.9152542,-0.03060199
+45,,,,2.200105,-0.9830508,-0.0328835
+46,,,,2.250105,-1.050847,-0.03515161
+47,,,,2.300105,-1.118644,-0.03741527
+48,,,,2.350107,-1.186441,-0.0396718
+49,,,,2.400105,-1.254237,-0.04189892
+50,,,,2.450105,-1.322034,-0.0441048
+51,,,,2.500105,-1.38983,-0.04636325
+52,,,,2.550105,-1.457627,-0.04867227
+53,,,,2.600105,-1.525424,-0.05084659
+54,,,,2.650105,-1.59322,-0.05312113
+55,,,,2.700105,-1.661017,-0.05541406
+56,,,,2.750105,-1.728814,-0.05765833
+57,,,,2.800104,-1.79661,-0.05982835
+58,,,,2.850104,-1.864407,-0.06213684
+59,,,,2.900105,-1.932203,-0.06436747
+60,,,,2.950104,-2.0,-0.06667926

@@ -1,0 +1,2 @@
+1. add firgure number
+2. check axis label
