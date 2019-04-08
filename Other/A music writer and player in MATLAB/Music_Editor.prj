@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration target="target.mlapps" target-name="Package App" name="Music_Editor" location="C:\Users\sy\SkyDrive\programs\backup 2" file="C:\Users\sy\SkyDrive\programs\backup 2\Music_Editor.prj" build-checksum="3581486438">
+    <param.appname>Music_Editor</param.appname>
+    <param.authnamewatermark>Shen,Yi</param.authnamewatermark>
+    <param.email>shen1@ualberta.ca</param.email>
+    <param.company />
+    <param.icon>${PROJECT_ROOT}\Music_Editor_resources\icon_24.png</param.icon>
+    <param.icons>
+      <file>${PROJECT_ROOT}\Music_Editor_resources\icon_48.png</file>
+      <file>${PROJECT_ROOT}\Music_Editor_resources\icon_24.png</file>
+      <file>${PROJECT_ROOT}\Music_Editor_resources\icon_16.png</file>
+    </param.icons>
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.version>1.0</param.version>
+    <param.products.name>
+      <item>MATLAB</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+    </param.products.id>
+    <param.products.version>
+      <item>8.2</item>
+    </param.products.version>
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}\Music_Editor.mlappinstall</param.output>
+    <param.guid>1bfc4911-90ad-4f58-85a1-25908c8607b8</param.guid>
+    <unset>
+      <param.company />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.version />
+      <param.platforms />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\Music_Editor_shen1_1386326.m</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\Music_Editor_shen1_1386326.fig</file>
+    </fileset.depfun>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\violin.mat</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file name="Music_Editor.mlappinstall" location="C:\Users\sy\SkyDrive\programs\backup 2" optional="false">C:\Users\sy\SkyDrive\programs\backup 2\Music_Editor.mlappinstall</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>D:\Program Files\MATLAB\R2013b</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.1</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
+

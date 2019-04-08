@@ -1,0 +1,16 @@
+function updated_buffer = update_window(old_buffer,window_moving_interval)
+    updated_buffer = old_buffer;
+    updated_buffer(1+window_moving_interval:256*2,1:8) = ...
+        old_buffer(1:256*2-window_moving_interval,1:8);
+    updated_buffer(1:window_moving_interval,1:8) = ...
+        old_buffer(1+256*2-window_moving_interval:256*2,9:16);
+    
+    updated_buffer(1+window_moving_interval:256*2,9:16) = ...
+        old_buffer(1:256*2-window_moving_interval,9:16);
+    updated_buffer(1:window_moving_interval,9:16) = ...
+        old_buffer(1+256*2-window_moving_interval:256*2,17:24);
+
+    updated_buffer(1+window_moving_interval:256*2,17:24) = ...
+        old_buffer(1:256*2-window_moving_interval,17:24);
+ 
+end

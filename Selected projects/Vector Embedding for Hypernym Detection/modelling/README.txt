@@ -1,0 +1,2 @@
+- Functions to turn raw text into numbers, and then do stuff with those numbers.
+- Includes embedding net, creating distribution matrix, PMI filtering, unsupervised evaluation metrics
