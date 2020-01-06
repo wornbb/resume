@@ -1,0 +1,288 @@
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.ensemble import BaggingRegressor
+from sklearn.linear_model import Lasso, LassoCV, LinearRegression
+from sklearn.metrics import make_scorer, mean_squared_error
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import StandardScaler
+
+from loading import read_volt_grid
+import pickle
+
+
+class gl_model():
+    """This is the complete model. A wrapper consisting both selector and predictor 
+    
+    Returns:
+        [type] -- [description]
+    """
+    def __init__(self, target_sensor_count=30, pred_str=0, apply_norm=True):
+        """Initialization
+        
+        Keyword Arguments:
+            target_sensor_count {int} -- Number of Sensors we want to place on the CPU (default: {30})
+            pred_str {int} -- time interval from prediction to predicted outcome (default: {0})
+            apply_norm {bool} -- If normalization  (default: {True})
+        """
+        self.pred_str = pred_str
+        self.apply_norm = apply_norm
+        self.scaler = StandardScaler()        
+        self.target_sensor_count = target_sensor_count
+    def init_selector(self,alpha=1.0, fit_intercept=True, normalize=False,
+                 precompute=False, copy_X=True, max_iter=1000,
+                 tol=1e-4, warm_start=False, positive=False,
+                 random_state=None, selection='cyclic'):
+        self.selector = gl_sensor_selector(alpha=alpha,target_sensor_count=self.target_sensor_count ,fit_intercept=fit_intercept,
+            normalize=normalize, precompute=precompute, copy_X=copy_X,
+            max_iter=max_iter, tol=tol, warm_start=warm_start,
+            positive=positive, random_state=random_state,
+            selection=selection)
+    def init_predicor(self):
+        self.predictor = LinearRegression(fit_intercept=False)
+    def fit(self, data_train):
+        data_selector = data_train
+        x = data_selector[::2,:data_selector.shape[1]-self.pred_str].T
+        y = data_selector[1::2,self.pred_str:].T
+
+        if self.apply_norm:
+            x = self.scaler.fit_transform(x.T).T
+            y = self.scaler.fit_transform(y.T).T
+        x = np.mean(x, axis=0).reshape(1, -1)
+        y = np.mean(y, axis=0).reshape(1, -1)
+        parameters = {'alpha':np.arange(0.65, 0.75, 0.01)}
+        # sensor selection
+        self.init_selector(max_iter=10000,fit_intercept=False,positive=True)
+        self.init_predicor()
+        score_correlation = make_scorer(self.selector.loss_correlation, greater_is_better=False)
+        score_sensor_count = make_scorer(self.selector.loss_sensor_count, greater_is_better=False)
+        self.cv = GridSearchCV(self.selector, parameters, cv=[(slice(None), slice(None))], refit= 'correlation', scoring={'correlation':score_correlation, 'count':score_sensor_count}, n_jobs=1)
+        self.cv.fit(X=y, y=x)
+        self.validity = self.cv.best_estimator_.validity
+        # data filtering
+        if self.validity:
+            self.sensor_map = self.cv.best_estimator_.predict(0)
+            self.selected_sensors = np.zeros(shape=data_train.shape[0], dtype=bool)
+            print(np.sum(self.sensor_map))
+            self.selected_sensors[::2] = self.sensor_map
+            self.selected_x = data_train[self.selected_sensors,:data_train.shape[1]-self.pred_str].T
+            other_y = data_train[:, self.pred_str:].T
+            # x = np.mean(self.selected_x, axis=0).reshape(1, -1)
+            # y = np.mean(other_y, axis=0).reshape(1, -1)
+            x = self.selected_x
+            y = other_y
+            self.predictor.fit(X=x, y=y)
+    def retrain_pred(self, data_train):
+        self.selected_x = data_train[self.selected_sensors,:data_train.shape[1]-self.pred_str].T
+        other_y = data_train[np.bitwise_not(self.selected_sensors), self.pred_str:].T
+        self.predictor.fit(X=self.selected_x, y=other_y)
+    def predict(self, x):
+        X = x[:,self.selected_sensors]
+        return self.predictor.predict(X)
+    def evaluate(self, x, y):
+        X = x[:,self.selected_sensors]
+        y_pred = self.predictor.predict(X)
+        return [0, mean_squared_error(y, y_pred)]
+class gl_original_model(gl_model):
+    """Complete model with cross validation for parameter tunning.
+    
+    Returns:
+        [type] -- [description]
+    """
+    def __init__(self, target_sensor_count=30, pred_str=0, apply_norm=True):
+        self.pred_str = pred_str
+        self.apply_norm = apply_norm
+        self.scaler = StandardScaler()        
+        self.target_sensor_count = target_sensor_count
+    def init_selector(self,alpha=1.0, fit_intercept=True, normalize=False,
+                 precompute=False, copy_X=True, max_iter=1000,
+                 tol=1e-4, warm_start=False, positive=False,
+                 random_state=None, selection='cyclic'):
+        self.selector = gl_sensor_selector(alpha=alpha,target_sensor_count=self.target_sensor_count ,fit_intercept=fit_intercept,
+            normalize=normalize, precompute=precompute, copy_X=copy_X,
+            max_iter=max_iter, tol=tol, warm_start=warm_start,
+            positive=positive, random_state=random_state,
+            selection=selection)
+    def init_predicor(self):
+        #self.predictor = BaggingRegressor(base_estimator=LinearRegression(fit_intercept=False), n_estimators=5, n_jobs=6)
+        self.predictor = LinearRegression(fit_intercept=False)
+    def predict(self, x):
+        X = x[:,self.selected_sensors]
+        return self.predictor.predict(X)
+    def evaluate(self, x, y):
+        X = x[:,self.selected_sensors]
+        y_pred = self.predictor.predict(X)
+        return [0, mean_squared_error(y, y_pred)]
+
+    def fit(self, data_train):
+        data_selector = data_train
+        x = data_selector[::2,:data_selector.shape[1]-self.pred_str].T
+        y = data_selector[1::2,self.pred_str:].T
+
+        if self.apply_norm:
+            x = self.scaler.fit_transform(x.T).T
+            y = self.scaler.fit_transform(y.T).T
+        parameters = {'alpha':np.arange(0.65, 0.75, 0.02)}
+        # sensor selection
+        self.init_selector(max_iter=10000,fit_intercept=False,positive=True)
+        self.init_predicor()
+        score_correlation = make_scorer(self.selector.loss_correlation, greater_is_better=False)
+        score_sensor_count = make_scorer(self.selector.loss_sensor_count, greater_is_better=False)
+        self.cv = GridSearchCV(self.selector, parameters, cv=[(slice(None), slice(None))], refit= 'correlation', scoring={'correlation':score_correlation, 'count':score_sensor_count}, n_jobs=1)
+        self.cv.fit(X=y, y=x)
+        self.validity = self.cv.best_estimator_.validity
+        # data filtering
+        if self.validity:
+            self.sensor_map = self.cv.best_estimator_.predict(0)
+            self.selected_sensors = np.zeros(shape=data_train.shape[0], dtype=bool)
+            print(np.sum(self.sensor_map))
+            self.selected_sensors[::2] = self.sensor_map
+            self.selected_x = data_train[self.selected_sensors,:data_train.shape[1]-self.pred_str].T
+            other_y = data_train[:, self.pred_str:].T
+            self.predictor.fit(X=self.selected_x, y=other_y)
+class gl_sensor_selector(Lasso):
+    """Child of Lasso from Scikit Learn. Only modified the cost function. The cost function will be a big role in cross-validation.
+    
+    Arguments:
+        Lasso {[type]} -- [description]
+    
+    Returns:
+        [type] -- [description]
+    """
+    def __init__(self, alpha=1.0, target_sensor_count=30,fit_intercept=True, normalize=False,
+                 precompute=False, copy_X=True, max_iter=1000,
+                 tol=1e-4, warm_start=False, positive=False,
+                 random_state=None, selection='cyclic'):
+        self.target_sensor_count = target_sensor_count
+        super().__init__(alpha=alpha,fit_intercept=fit_intercept,
+            normalize=normalize, precompute=precompute, copy_X=copy_X,
+            max_iter=max_iter, tol=tol, warm_start=warm_start,
+            positive=positive, random_state=random_state,
+            selection=selection)
+    def fit(self, true_y, true_x):
+        # when call fit, sklearn always takes the 1st input as x and 2nd input as y.
+        # when call score, skleran always takes the 1st input as y and 2nd input as prediction
+        # but we want socre function take x instead of y.
+        # this trick is to get around the score function limitation
+        x = true_x
+        y = true_y
+        # scaler = StandardScaler()
+        # x = scaler.fit_transform(x)
+        # y = scaler.fit_transform(y)
+        super().fit(x,y)
+        w = self.coef_
+        if w.ndim == 2:
+            self.importance = np.linalg.norm(w, axis=1)
+        else:
+            self.importance = w
+        
+
+        self.validity = True
+        self.selected = np.zeros_like(self.importance, dtype=bool)
+        sorted_w = np.argsort(self.importance)
+        self.selected[sorted_w[-self.target_sensor_count:]] = True
+        #print(np.linalg.norm(y.T - w.dot(x.T),1))
+    def predict(self, x):
+        if self.validity:
+            return self.selected
+        else:
+            return False
+    def loss_sensor_count(self, y_true, selected):
+        if type(selected) != bool:
+            return np.abs(np.count_nonzero(selected)-self.target_sensor_count)
+        else:
+            return 100000
+
+    def loss_correlation(self, y_true, selected):
+        if type(selected) != bool:
+            X = pd.DataFrame(y_true[:, selected])
+            corrmat = X.corr()
+            mask = np.ones(corrmat.shape, dtype='bool')
+            mask[np.triu_indices(len(corrmat))] = False
+            z_trans = np.arctan(corrmat.values)
+            z_mean  = np.mean(np.absolute(z_trans))
+            return np.abs(np.tanh(z_mean))
+        else:
+            return 1
+def loss_sensor_count(y_true, selected):
+    return np.count_nonzero(selected)
+
+def loss_correlation(y_true, selected):
+    X = pd.DataFrame(y_true[:, selected])
+    corrmat = X.corr()
+    mask = np.ones(corrmat.shape, dtype='bool')
+    mask[np.triu_indices(len(corrmat))] = False
+    z_trans = np.arctan(corrmat.values)
+    z_mean  = np.mean(np.absolute(z_trans))
+    return np.abs(np.tanh(z_mean))
+
+
+
+if __name__ == "__main__":
+    fname = "F:\\Yaswan2c\\Yaswan2c.gridIR"
+    n = 10000
+    data = read_volt_grid(fname, n)
+    models = []
+    registered_count = []
+    # new algorithm
+    for pred_str in [0,5,10,20,40]:
+        glsp = gl_model(pred_str=pred_str)
+        glsp.fit(data)
+        if glsp.validity:
+            models.append(glsp)
+            registered_count.append(pred_str)
+        else:
+            print(pred_str)
+        print("complete")
+        pickle.dump(registered_count, open("gl.auto.pred_str.registry","wb"))
+        pickle.dump(models, open("gl.auto.pred_str.models","wb"))
+    # new algo for different sensors
+    models = []
+    for sensor_count in range(50,850,50):
+        pred_str = 0
+        glsp = gl_model(pred_str=pred_str, target_sensor_count=sensor_count)
+        glsp.fit(data)
+        if glsp.validity:
+            models.append(glsp)
+            registered_count.append(sensor_count)
+        else:
+            print(sensor_count)
+        print("complete")
+        pickle.dump(registered_count, open("gl.auto.sensors.registry","wb"))
+        pickle.dump(models, open("gl.auto.sensors.models","wb"))
+    # # old algorithm
+    # fname = "F:\\Yaswan2c\\Yaswan2c.gridIR"
+    # n = 100 # old algoirthm cant handle too much data
+    # data = read_volt_grid(fname, n)
+    # models = []
+    # for pred_str in [0,5,10,20,40]:
+    #     glsp = gl_original_model(pred_str=pred_str)
+    #     glsp.fit(data)
+    #     if glsp.validity:
+    #         models.append(glsp)
+    #         registered_count.append(pred_str)
+    #     else:
+    #         print(pred_str)
+    #     print("complete")
+    #     pickle.dump(registered_count, open("gl.pred_str.registry","wb"))
+    #     pickle.dump(models, open("gl.pred_str.models","wb"))
+
+    import winsound
+    frequency = 2500  # Set Frequency To 2500 Hertz
+    duration = 1000  # Set Duration To 1000 ms == 1 second
+    winsound.Beep(frequency, duration)
+    # fname = "C:\\Users\\Yi\\Desktop\\Yaswan2c\\Yaswan2c.gridIR"
+    # n = 200
+    # data = read_volt_grid(fname, n)
+    # models = []
+    # registered_count = []
+    # for target_sensor_count in [20,40,80,160,320]:
+    #     glsp = gl_model(target_sensor_count=target_sensor_count, pred_str=10)
+    #     glsp.fit(data)
+    #     if glsp.validity:
+    #         models.append(glsp)
+    #         registered_count.append(target_sensor_count)
+    #     import pickle
+    #     pickle.dump(registered_count, open("gl.target_sensor_count.registry1","wb"))
+    #     pickle.dump(models, open("gl.target_sensor_count.models1","wb"))
+
