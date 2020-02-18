@@ -9,7 +9,7 @@ class EReport():
         self.employees = []
         with open(f_name, 'r') as f:
             for line in f: # loop through the file
-                line = line[:-1] # stripe new_line
+                line = line.rstrip('\n') # stripe new_line
                 comment_location = line.find("#")
                 if comment_location != -1:
                     # ignore all strings after the first #
