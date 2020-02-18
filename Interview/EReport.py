@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
 import re
 from operator import itemgetter
+import argparse
 class EReport():
     def parse(self, f_name):
         """parse the file and store the data.
@@ -33,8 +33,11 @@ class EReport():
         self._print_all()
 
 if __name__ == "__main__":
-    f_name = "employees.dat"
-    parser = EReport()
-    parser.parse(f_name)
-    parser.print_sort_by_no()
-    parser.print_sort_by_ln()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('f_name', metavar='I', type=str, nargs='?', default='employees.dat',
+                    help='Give me a path or I will guess')
+    args = parser.parse_args()
+    report = EReport()
+    report.parse(args.f_name)
+    report.print_sort_by_no()
+    report.print_sort_by_ln()
