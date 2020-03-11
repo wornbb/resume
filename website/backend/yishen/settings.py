@@ -67,9 +67,6 @@ INSTALLED_APPS = [
 
     # local apps
     'accounts',
-    'forums',
-    'threads',
-    'posts'
 ]
 
 # https://github.com/ottoyiu/django-cors-headers

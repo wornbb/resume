@@ -11,9 +11,7 @@ import HeaderContainer from './containers/header';
 import ModalContainer from './containers/modal';
 import UserProfileContainer from './containers/userprofile';
 import UsersContainer from './containers/users';
-import ThreadContainer from './containers/thread';
 import HomeContainer from './containers/home';
-import ForumContainer from './containers/forum';
 import NotFoundPage from './components/notfoundpage';
 import registerServiceWorker from './registerServiceWorker';
 
