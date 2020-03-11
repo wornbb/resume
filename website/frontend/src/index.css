@@ -1,0 +1,24 @@
+.app-layout {
+  min-width: 700px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header-background {
+  position: absolute;
+  width: 100%;
+  background-color: #222;
+  height: 60px;
+  z-index: -1;
+}
+
+a:-webkit-any-link{
+  text-decoration:none;
+  cursor: pointer;
+  color: white;
+}
+
+a:-webkit-any-link:hover{
+  text-decoration:underline;
+  color: white;
+}
