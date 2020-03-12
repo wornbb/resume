@@ -1,3 +1,4 @@
+#! python3
 import re
 from operator import itemgetter
 import argparse
@@ -15,20 +16,22 @@ class EReport():
                     # ignore all strings after the first #
                     line = line[:comment_location]
                 if line: # if line is not empty
+                    # assuming all inputs are valid, because error handling is not specified.
                     # it runs at python 3, so all characters from all language should be matched
                     [no, first, last] = re.findall(r'\w+', line)
-                    # assuming all inputs are valid, because error handling is not specified.
-                    self.employees.append({'no': no, 'first': first.capitalize(), 'last': last.capitalize()})
+                    self.employees.append({'no': int(no), 'first': first.capitalize(), 'last': last.capitalize()})
     def _print_all(self):
         for employee in self.employees:
-            print(employee['no'] + ',' + employee['first'] + ' ' + employee['last'])
+            print(str(employee['no']) + ',' + employee['first'] + ' ' + employee['last'])
         print()
     def print_sort_by_ln(self):
         print('Processing by last (family) Name...')
+        # if last name the same, sort by number
         self.employees.sort(key=itemgetter('last', 'no'))
         self._print_all()
     def print_sort_by_no(self):
         print('Processing by employee number...')
+        # all numbers should be distinct
         self.employees.sort(key=itemgetter('no'))
         self._print_all()
 

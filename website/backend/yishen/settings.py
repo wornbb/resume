@@ -67,6 +67,7 @@ INSTALLED_APPS = [
 
     # local apps
     'accounts',
+    'pydemo',
 ]
 
 # https://github.com/ottoyiu/django-cors-headers
